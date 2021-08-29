@@ -194,6 +194,7 @@ song = ['--------', 'stop', 0, 'sheets']
 scroll = 0
 
 while cvs.running:
+    is_clicked = False
     cvs.this.fill(cvs.bgc)
     MX = pygame.mouse.get_pos()[0]
     MY = pygame.mouse.get_pos()[1]
@@ -213,11 +214,16 @@ while cvs.running:
         if event.type == pygame.VIDEORESIZE:
             vw, vh = event.size[0]/100, event.size[1]/100
         if event.type == pygame.MOUSEBUTTONDOWN:
+            if cvs.is_hover(0, 100*vh-5*vnw, 100*vw, 6*vnw):
+                is_clicked = True
             for button in buttons:
                 if cvs.is_hover(buttons[button][0], buttons[button][1], buttons[button][2], buttons[button][3]):
                     cvs.page['self'] = button
+                    scroll = 0
+                    is_clicked = True
             for button in buttons_player:
                 if cvs.is_hover(buttons_player[button][0], buttons_player[button][1], buttons_player[button][2], buttons_player[button][3]):
+                    is_clicked = True
                     if button == 'play':
                         if song[1] == 'stop':
                             if os.path.exists('./%s/%s' %(song[3], song[0])) and os.path.isfile('./%s/%s' %(song[3], song[0])):
@@ -228,7 +234,7 @@ while cvs.running:
                         os.system('.\\files\\alda.exe stop')
                     song[1] = button
             for i in range(0, len(listdir)):
-                if cvs.is_hover(2*vnw, (images['logo'][3]*20+7+i*2+scroll)*vnw, 100*vw - 4*vnw, 2*vnw) and (images['logo'][3]*20+7+i*2+scroll)*vnw >= (images['logo'][3]*20+7)*vnw:
+                if cvs.is_hover(2*vnw, (images['logo'][3]*20+7+i*2+scroll)*vnw, 100*vw - 4*vnw, 2*vnw) and (images['logo'][3]*20+7+i*2+scroll)*vnw >= (images['logo'][3]*20+7)*vnw and (images['logo'][3]*20+7+i*2+scroll+2)*vnw < 100*vw - 5*vnw and is_clicked == False:
                     if cvs.page['self'] == 'sheets':
                         clickPath = './sheets/%s' %(listdir[i])
                         if os.path.exists(clickPath):
@@ -290,12 +296,12 @@ while cvs.running:
         ctx.font = str(int(2*vnw))+'px '+textFont
         ctx.fillText(button, buttons[button][0]+(5-len(button)/2*0.8)*vnw, buttons[button][1]+1*vnw)
     ctx.fillStyle = color.gray_w
-    ctx.fillRect(0, 100*vh-5*vnw, 100*vw, 5*vnw)
+    ctx.fillRect(0, 100*vh-5*vnw, 100*vw, 6*vnw)
     ctx.fillStyle = color.black
     ctx.font = str(int(2.5*vnw))+'px '+textFont
     ctx.fillText('%s: %s' %(song[3], song[0]), 5*vnw, 100*vh-3.25*vnw)
     ctx.fillStyle = color.gray_w
-    ctx.fillRect(100*vw-14*vnw, 100*vh-5*vnw, 100*vw, 5*vnw)
+    ctx.fillRect(100*vw-14*vnw, 100*vh-5*vnw, 100*vw, 6*vnw)
     for button in buttons_player:
         ctx.lineWidth = 0.17*vnw
         ctx.fillStyle = color.gray
