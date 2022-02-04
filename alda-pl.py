@@ -28,6 +28,8 @@ def deg(r):
 import webbrowser
 def webOpen(url):
     webbrowser.open(url)
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
 import urllib.request
 def webRead(url):
     with urllib.request.urlopen(url) as response:
